@@ -165,42 +165,43 @@
     }
 
     .sig-name {
-      font-size: 22px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--navy);
       line-height: 1.2;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .sig-title {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--blue);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .sig-divider {
-      height: 1px;
-      background: linear-gradient(to right, var(--blue), rgba(91,155,213,0.1));
-      margin-bottom: 14px;
-      width: 220px;
+      height: 0;
+      border: none;
+      border-top: 1px solid var(--blue);
+      margin-bottom: 8px;
+      width: 180px;
     }
 
     .sig-contacts {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
     }
 
     .sig-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 7px;
     }
 
     .sig-icon {
-      width: 28px;
-      height: 28px;
+      width: 18px;
+      height: 18px;
       background: var(--navy);
       border-radius: 50%;
       display: flex;
@@ -210,13 +211,13 @@
     }
 
     .sig-icon svg {
-      width: 14px;
-      height: 14px;
+      width: 10px;
+      height: 10px;
       fill: white;
     }
 
     .sig-contact-text {
-      font-size: 13px;
+      font-size: 11px;
       color: var(--navy);
       text-decoration: none;
     }
@@ -227,14 +228,14 @@
     }
 
     .sig-right {
-      padding: 8px 8px 8px 32px;
+      padding: 8px 8px 8px 24px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .sig-right img {
-      width: 220px;
+      width: 160px;
       height: auto;
       display: block;
     }
@@ -357,7 +358,7 @@
             <div class="sig-left">
               <div class="sig-name" id="p-name">Mike Howe</div>
               <div class="sig-title" id="p-title">Owner</div>
-              <div class="sig-divider"></div>
+              <hr class="sig-divider" />
               <div class="sig-contacts">
 
                 <div class="sig-row">
@@ -422,7 +423,8 @@
   </div>
 
   <script>
-    const LOGO_URL = 'https://assets.mountainhomehoa.com/logo-master.png';
+    const LOGO_URL  = 'https://assets.mountainhomehoa.com/logo-master.png';
+    const ICON_BASE = 'https://assets.mountainhomehoa.com/icons';
 
     function val(id) {
       return document.getElementById(id).value.trim();
@@ -451,30 +453,30 @@
     function buildHTML(name, title, phone, addr1, addr2, web) {
       return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;">
   <tr>
-    <td style="padding:8px 24px 8px 16px;border-left:3px solid #5b9bd5;vertical-align:top;">
-      <div style="font-size:22px;font-weight:700;color:#1e3a6e;line-height:1.2;margin-bottom:4px;">${esc(name)}</div>
-      <div style="font-size:13px;font-weight:600;color:#5b9bd5;margin-bottom:12px;">${esc(title)}</div>
-      <div style="height:1px;width:220px;background:#5b9bd5;margin-bottom:14px;"></div>
+    <td style="padding:6px 20px 6px 12px;border-left:3px solid #5b9bd5;vertical-align:top;">
+      <div style="font-size:17px;font-weight:700;color:#1e3a6e;line-height:1.2;margin-bottom:2px;">${esc(name)}</div>
+      <div style="font-size:11px;font-weight:600;color:#5b9bd5;margin-bottom:8px;">${esc(title)}</div>
+      <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;"><tr><td width="180" style="border-top:1px solid #5b9bd5;font-size:0;line-height:0;">&nbsp;</td></tr></table>
       <table cellpadding="0" cellspacing="0" border="0">
-        ${contactRow('&#9990;', esc(phone))}
-        ${contactRow('&#9993;', esc(addr1))}
-        ${contactRow('&#10148;', esc(addr2))}
-        ${contactRow('&#127760;', `<a href="${esc(web)}" style="color:#1e3a6e;">${esc(web)}</a>`)}
+        ${contactRow('phone',    esc(phone))}
+        ${contactRow('mail',     esc(addr1))}
+        ${contactRow('location', esc(addr2))}
+        ${contactRow('globe',    `<a href="${esc(web)}" style="color:#1e3a6e;">${esc(web)}</a>`)}
       </table>
     </td>
-    <td style="padding:8px 8px 8px 32px;vertical-align:middle;">
-      <img src="${LOGO_URL}" width="220" alt="Mountain Home HOA Solutions" style="display:block;" />
+    <td style="padding:6px 6px 6px 24px;vertical-align:middle;">
+      <img src="${LOGO_URL}" width="160" alt="Mountain Home HOA Solutions" style="display:block;" />
     </td>
   </tr>
 </table>`;
     }
 
-    function contactRow(icon, content) {
+    function contactRow(iconName, content) {
       return `        <tr>
-          <td style="padding:3px 10px 3px 0;vertical-align:middle;">
-            <div style="width:28px;height:28px;background:#1e3a6e;border-radius:50%;text-align:center;line-height:28px;color:white;font-size:13px;">${icon}</div>
+          <td style="padding:2px 7px 2px 0;vertical-align:middle;">
+            <img src="${ICON_BASE}/icon-${iconName}.png" width="18" height="18" alt="" style="display:block;" />
           </td>
-          <td style="padding:3px 0;vertical-align:middle;font-size:13px;color:#1e3a6e;">${content}</td>
+          <td style="padding:2px 0;vertical-align:middle;font-size:11px;color:#1e3a6e;">${content}</td>
         </tr>`;
     }
 
