@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signature Generator — Mountain Home HOA</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:  #1e3a6e;
+      --blue:  #5b9bd5;
+      --light: #e8f0fb;
+      --gray:  #6b7280;
+      --bg:    #f5f7fa;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--navy);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--white);
+      border-bottom: 3px solid var(--blue);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(30,58,110,0.08);
+    }
+
+    header img { height: 48px; }
+
+    .header-text h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .header-text p {
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-top: 1px;
+    }
+
+    header .back {
+      margin-left: auto;
+      font-size: 0.82rem;
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    header .back:hover { text-decoration: underline; }
+
+    /* ── Page Layout ── */
+    .page {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .page { grid-template-columns: 1fr; }
+    }
+
+    /* ── Form Panel ── */
+    .form-panel {
+      background: var(--white);
+      border-radius: 12px;
+      border: 1px solid #dce4f0;
+      padding: 28px;
+    }
+
+    .form-panel h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e8ecf4;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--gray);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="url"] {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #d1d9e8;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      color: var(--navy);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(91,155,213,0.2);
+    }
+
+    /* ── Preview Panel ── */
+    .preview-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .preview-panel h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .preview-box {
+      background: #fafbfe;
+      border: 1px solid #dce4f0;
+      border-radius: 12px;
+      padding: 32px;
+      overflow-x: auto;
+    }
+
+    /* ── The Signature Itself ── */
+    #sig-preview {
+      display: inline-block;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .sig-wrap {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .sig-left {
+      padding: 8px 24px 8px 16px;
+      border-left: 3px solid var(--blue);
+      min-width: 280px;
+    }
+
+    .sig-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .sig-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .sig-divider {
+      height: 1px;
+      background: linear-gradient(to right, var(--blue), rgba(91,155,213,0.1));
+      margin-bottom: 14px;
+      width: 220px;
+    }
+
+    .sig-contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sig-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sig-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--navy);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sig-icon svg {
+      width: 14px;
+      height: 14px;
+      fill: white;
+    }
+
+    .sig-contact-text {
+      font-size: 13px;
+      color: var(--navy);
+      text-decoration: none;
+    }
+
+    a.sig-contact-text {
+      text-decoration: underline;
+      color: var(--navy);
+    }
+
+    .sig-right {
+      padding: 8px 8px 8px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sig-right img {
+      width: 220px;
+      height: auto;
+      display: block;
+    }
+
+    /* ── Output Box ── */
+    .output-section {
+      background: var(--white);
+      border: 1px solid #dce4f0;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .output-header h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .copy-btn {
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .copy-btn:hover { background: #16305c; }
+    .copy-btn:active { transform: scale(0.97); }
+    .copy-btn.copied { background: #16a34a; }
+
+    .output-code {
+      background: #f0f4fb;
+      border-radius: 7px;
+      padding: 12px 14px;
+      font-family: 'Menlo', 'Monaco', monospace;
+      font-size: 0.7rem;
+      color: #374151;
+      max-height: 160px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.5;
+      user-select: all;
+    }
+
+    .instructions {
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .instructions strong { color: var(--navy); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="logo-master.png" alt="Mountain Home HOA" />
+    <div class="header-text">
+      <h1>Email Signature Generator</h1>
+      <p>Mountain Home HOA Solutions</p>
+    </div>
+    <a href="index.html" class="back">← Employee Portal</a>
+  </header>
+
+  <div class="page">
+
+    <!-- Form -->
+    <div class="form-panel">
+      <h2>Your Information</h2>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="f-name" value="Mike Howe" oninput="update()" />
+      </div>
+      <div class="field">
+        <label>Job Title</label>
+        <input type="text" id="f-title" value="Owner" oninput="update()" />
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="f-phone" value="(208) 999-2715" oninput="update()" />
+      </div>
+      <div class="field">
+        <label>Mailing Address (Line 1)</label>
+        <input type="text" id="f-addr1" value="PO Box 980506" oninput="update()" />
+      </div>
+      <div class="field">
+        <label>City, State ZIP</label>
+        <input type="text" id="f-addr2" value="Park City, UT 84098" oninput="update()" />
+      </div>
+      <div class="field">
+        <label>Website</label>
+        <input type="url" id="f-web" value="https://mountainhomehoa.com" oninput="update()" />
+      </div>
+    </div>
+
+    <!-- Preview + Output -->
+    <div class="preview-panel">
+      <h2>Live Preview</h2>
+
+      <div class="preview-box">
+        <div id="sig-preview">
+          <div class="sig-wrap">
+            <div class="sig-left">
+              <div class="sig-name" id="p-name">Mike Howe</div>
+              <div class="sig-title" id="p-title">Owner</div>
+              <div class="sig-divider"></div>
+              <div class="sig-contacts">
+
+                <div class="sig-row">
+                  <div class="sig-icon">
+                    <!-- phone -->
+                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                  </div>
+                  <span class="sig-contact-text" id="p-phone">(208) 999-2715</span>
+                </div>
+
+                <div class="sig-row">
+                  <div class="sig-icon">
+                    <!-- envelope -->
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                  </div>
+                  <span class="sig-contact-text" id="p-addr1">PO Box 980506</span>
+                </div>
+
+                <div class="sig-row">
+                  <div class="sig-icon">
+                    <!-- location pin -->
+                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9 13.38 11.5 12 11.5z"/></svg>
+                  </div>
+                  <span class="sig-contact-text" id="p-addr2">Park City, UT 84098</span>
+                </div>
+
+                <div class="sig-row">
+                  <div class="sig-icon">
+                    <!-- globe -->
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                  </div>
+                  <a class="sig-contact-text" id="p-web" href="https://mountainhomehoa.com" target="_blank">https://mountainhomehoa.com</a>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="sig-right">
+              <img src="logo-master.png" alt="Mountain Home HOA Solutions" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy action -->
+      <div class="output-section">
+        <div class="output-header">
+          <h3>Paste directly into Gmail or Outlook</h3>
+          <button class="copy-btn" id="copy-btn" onclick="copySignature()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            Copy Signature
+          </button>
+        </div>
+        <p class="instructions">
+          Click <strong>Copy Signature</strong>, then paste directly into your email client's signature field — no HTML editing required.<br><br>
+          <strong>Gmail:</strong> Settings → See all settings → General → Signature → Create new → paste.<br>
+          <strong>Outlook:</strong> File → Options → Mail → Signatures → New → paste.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const LOGO_URL = 'https://assets.mountainhomehoa.com/logo-master.png';
+
+    function val(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    function update() {
+      const name  = val('f-name');
+      const title = val('f-title');
+      const phone = val('f-phone');
+      const addr1 = val('f-addr1');
+      const addr2 = val('f-addr2');
+      const web   = val('f-web');
+
+      document.getElementById('p-name').textContent  = name;
+      document.getElementById('p-title').textContent = title;
+      document.getElementById('p-phone').textContent = phone;
+      document.getElementById('p-addr1').textContent = addr1;
+      document.getElementById('p-addr2').textContent = addr2;
+      const webEl = document.getElementById('p-web');
+      webEl.textContent = web;
+      webEl.href = web;
+
+      // (output-code removed — copy uses ClipboardItem directly)
+    }
+
+    function buildHTML(name, title, phone, addr1, addr2, web) {
+      return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;">
+  <tr>
+    <td style="padding:8px 24px 8px 16px;border-left:3px solid #5b9bd5;vertical-align:top;">
+      <div style="font-size:22px;font-weight:700;color:#1e3a6e;line-height:1.2;margin-bottom:4px;">${esc(name)}</div>
+      <div style="font-size:13px;font-weight:600;color:#5b9bd5;margin-bottom:12px;">${esc(title)}</div>
+      <div style="height:1px;width:220px;background:#5b9bd5;margin-bottom:14px;"></div>
+      <table cellpadding="0" cellspacing="0" border="0">
+        ${contactRow('&#9990;', esc(phone))}
+        ${contactRow('&#9993;', esc(addr1))}
+        ${contactRow('&#10148;', esc(addr2))}
+        ${contactRow('&#127760;', `<a href="${esc(web)}" style="color:#1e3a6e;">${esc(web)}</a>`)}
+      </table>
+    </td>
+    <td style="padding:8px 8px 8px 32px;vertical-align:middle;">
+      <img src="${LOGO_URL}" width="220" alt="Mountain Home HOA Solutions" style="display:block;" />
+    </td>
+  </tr>
+</table>`;
+    }
+
+    function contactRow(icon, content) {
+      return `        <tr>
+          <td style="padding:3px 10px 3px 0;vertical-align:middle;">
+            <div style="width:28px;height:28px;background:#1e3a6e;border-radius:50%;text-align:center;line-height:28px;color:white;font-size:13px;">${icon}</div>
+          </td>
+          <td style="padding:3px 0;vertical-align:middle;font-size:13px;color:#1e3a6e;">${content}</td>
+        </tr>`;
+    }
+
+    function esc(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    async function copySignature() {
+      const html = buildHTML(val('f-name'), val('f-title'), val('f-phone'), val('f-addr1'), val('f-addr2'), val('f-web'));
+      const btn = document.getElementById('copy-btn');
+
+      try {
+        // Copy as rich text/html so email clients paste it rendered, not as code
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([val('f-name') + '\n' + val('f-title')], { type: 'text/plain' })
+          })
+        ]);
+      } catch (e) {
+        // Fallback: render into a hidden element and use execCommand
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        Object.assign(tmp.style, { position: 'fixed', left: '-9999px', top: '0' });
+        document.body.appendChild(tmp);
+        const range = document.createRange();
+        range.selectNode(tmp);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand('copy');
+        sel.removeAllRanges();
+        document.body.removeChild(tmp);
+      }
+
+      btn.innerHTML = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Copy Signature`;
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+
+    // Init output on load
+    update();
+  </script>
+
+</body>
+</html>
