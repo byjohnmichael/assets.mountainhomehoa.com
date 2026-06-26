@@ -140,7 +140,7 @@
     }
 
     .preview-box {
-      background: #fafbfe;
+      background: var(--white);
       border: 1px solid #dce4f0;
       border-radius: 12px;
       padding: 32px;
@@ -159,11 +159,35 @@
       gap: 0;
     }
 
-    .sig-left {
-      padding: 8px 24px 8px 16px;
-      border-left: 3px solid var(--blue);
-      min-width: 280px;
+    /* Shared info block */
+    .sig-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 270px;
     }
+
+    /* Shared logo block */
+    .sig-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sig-logo img {
+      width: 200px;
+      height: auto;
+      display: block;
+    }
+
+    /* Line variants */
+    .line-on-left  { border-left: 3px solid var(--blue); }
+
+    /* Padding presets */
+    .pad-info-standard { padding: 8px 24px 8px 16px; }
+    .pad-info-after    { padding: 8px 8px 8px 20px; }
+    .pad-logo-standard { padding: 8px 16px; }
+    .pad-logo-after    { padding: 8px 8px 8px 24px; }
 
     .sig-name {
       font-size: 17px;
@@ -228,19 +252,6 @@
       color: var(--navy);
     }
 
-    .sig-right {
-      padding: 8px 8px 8px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sig-right img {
-      width: 200px;
-      height: auto;
-      display: block;
-    }
-
     /* ── Output Box ── */
     .output-section {
       background: var(--white);
@@ -280,21 +291,6 @@
     .copy-btn:hover { background: #16305c; }
     .copy-btn:active { transform: scale(0.97); }
     .copy-btn.copied { background: #16a34a; }
-
-    .output-code {
-      background: #f0f4fb;
-      border-radius: 7px;
-      padding: 12px 14px;
-      font-family: 'Menlo', 'Monaco', monospace;
-      font-size: 0.7rem;
-      color: #374151;
-      max-height: 160px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      word-break: break-all;
-      line-height: 1.5;
-      user-select: all;
-    }
 
     .instructions {
       margin-top: 16px;
@@ -351,57 +347,11 @@
 
     <!-- Preview + Output -->
     <div class="preview-panel">
+
       <h2>Live Preview</h2>
 
       <div class="preview-box">
-        <div id="sig-preview">
-          <div class="sig-wrap">
-            <div class="sig-left">
-              <div class="sig-name" id="p-name">Mike Howe</div>
-              <div class="sig-title" id="p-title">Owner</div>
-              <hr class="sig-divider" />
-              <div class="sig-contacts">
-
-                <div class="sig-row">
-                  <div class="sig-icon">
-                    <!-- phone -->
-                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                  </div>
-                  <span class="sig-contact-text" id="p-phone">(208) 999-2715</span>
-                </div>
-
-                <div class="sig-row">
-                  <div class="sig-icon">
-                    <!-- envelope -->
-                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                  </div>
-                  <span class="sig-contact-text" id="p-addr1">PO Box 980506</span>
-                </div>
-
-                <div class="sig-row">
-                  <div class="sig-icon">
-                    <!-- location pin -->
-                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9 13.38 11.5 12 11.5z"/></svg>
-                  </div>
-                  <span class="sig-contact-text" id="p-addr2">Park City, UT 84098</span>
-                </div>
-
-                <div class="sig-row">
-                  <div class="sig-icon">
-                    <!-- globe -->
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                  </div>
-                  <a class="sig-contact-text" id="p-web" href="https://mountainhomehoa.com" target="_blank">https://mountainhomehoa.com</a>
-                </div>
-
-              </div>
-            </div>
-
-            <div class="sig-right">
-              <img src="logo-master.png" alt="Mountain Home HOA Solutions" />
-            </div>
-          </div>
-        </div>
+        <div id="sig-preview"></div>
       </div>
 
       <!-- Copy action -->
@@ -427,49 +377,71 @@
     const LOGO_URL  = 'https://assets.mountainhomehoa.com/logo-master.png';
     const ICON_BASE = 'https://assets.mountainhomehoa.com/icons';
 
-    function val(id) {
-      return document.getElementById(id).value.trim();
+    // ── Form helpers ──────────────────────────────────────────────────
+    function val(id) { return document.getElementById(id).value.trim(); }
+
+    function getFormData() {
+      return {
+        name:  val('f-name'),
+        title: val('f-title'),
+        phone: val('f-phone'),
+        addr1: val('f-addr1'),
+        addr2: val('f-addr2'),
+        web:   val('f-web'),
+      };
     }
 
+    // ── SVG icons for preview ─────────────────────────────────────────
+    const SVG_PHONE    = `<svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+    const SVG_MAIL     = `<svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`;
+    const SVG_LOCATION = `<svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9 13.38 11.5 12 11.5z"/></svg>`;
+    const SVG_GLOBE    = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
+
+    function iconRow(svg, content) {
+      return `<div class="sig-row">
+        <div class="sig-icon">${svg}</div>
+        ${content}
+      </div>`;
+    }
+
+    function previewInfo(d) {
+      return `
+        <div class="sig-name">${d.name}</div>
+        <div class="sig-title">${d.title}</div>
+        <hr class="sig-divider" />
+        <div class="sig-contacts">
+          ${iconRow(SVG_PHONE,    `<span class="sig-contact-text">${d.phone}</span>`)}
+          ${iconRow(SVG_MAIL,     `<span class="sig-contact-text">${d.addr1}</span>`)}
+          ${iconRow(SVG_LOCATION, `<span class="sig-contact-text">${d.addr2}</span>`)}
+          ${iconRow(SVG_GLOBE,    `<a class="sig-contact-text" href="${d.web}" target="_blank">${d.web}</a>`)}
+        </div>`;
+    }
+
+    function previewLogo() {
+      return `<img src="logo-master.png" alt="Mountain Home HOA Solutions" style="width:200px;height:auto;display:block;" />`;
+    }
+
+    // ── Render live preview ───────────────────────────────────────────
+    function renderPreview(d) {
+      return `<div class="sig-wrap">
+        <div class="sig-logo pad-logo-standard" style="padding-right:20px;">
+          ${previewLogo()}
+        </div>
+        <div class="sig-info line-on-left pad-info-standard">
+          ${previewInfo(d)}
+        </div>
+      </div>`;
+    }
+
+    // ── Main update ───────────────────────────────────────────────────
     function update() {
-      const name  = val('f-name');
-      const title = val('f-title');
-      const phone = val('f-phone');
-      const addr1 = val('f-addr1');
-      const addr2 = val('f-addr2');
-      const web   = val('f-web');
-
-      document.getElementById('p-name').textContent  = name;
-      document.getElementById('p-title').textContent = title;
-      document.getElementById('p-phone').textContent = phone;
-      document.getElementById('p-addr1').textContent = addr1;
-      document.getElementById('p-addr2').textContent = addr2;
-      const webEl = document.getElementById('p-web');
-      webEl.textContent = web;
-      webEl.href = web;
-
-      // (output-code removed — copy uses ClipboardItem directly)
+      const d = getFormData();
+      document.getElementById('sig-preview').innerHTML = renderPreview(d);
     }
 
-    function buildHTML(name, title, phone, addr1, addr2, web) {
-      return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;">
-  <tr>
-    <td style="padding:6px 20px 6px 12px;border-left:3px solid #5b9bd5;vertical-align:top;">
-      <div style="font-size:17px;font-weight:700;color:#1e3a6e;line-height:1.2;margin-bottom:2px;">${esc(name)}</div>
-      <div style="font-size:11px;font-weight:600;color:#5b9bd5;margin-bottom:8px;">${esc(title)}</div>
-      <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;"><tr><td width="180" style="border-top:1px solid #5b9bd5;font-size:0;line-height:0;">&nbsp;</td></tr></table>
-      <table cellpadding="0" cellspacing="0" border="0">
-        ${contactRow('phone',    esc(phone))}
-        ${contactRow('mail',     esc(addr1))}
-        ${contactRow('location', esc(addr2))}
-        ${contactRow('globe',    `<a href="${esc(web)}" style="color:#1e3a6e;">${esc(web)}</a>`)}
-      </table>
-    </td>
-    <td style="padding:6px 6px 6px 24px;vertical-align:middle;">
-      <img src="${LOGO_URL}" width="200" alt="Mountain Home HOA Solutions" style="display:block;" />
-    </td>
-  </tr>
-</table>`;
+    // ── Email-client HTML (table-based, inline styles) ────────────────
+    function esc(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
     function contactRow(iconName, content) {
@@ -481,24 +453,50 @@
         </tr>`;
     }
 
-    function esc(s) {
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    function infoCell(d, borderStyle) {
+      return `    <td style="${borderStyle}padding:6px 24px 6px 16px;vertical-align:top;">
+      <div style="font-size:17px;font-weight:700;color:#1e3a6e;line-height:1.2;margin-bottom:2px;">${esc(d.name)}</div>
+      <div style="font-size:11px;font-weight:600;color:#5b9bd5;margin-bottom:8px;">${esc(d.title)}</div>
+      <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;"><tr><td width="180" style="border-top:1px solid #5b9bd5;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+      <table cellpadding="0" cellspacing="0" border="0">
+        ${contactRow('phone',    esc(d.phone))}
+        ${contactRow('mail',     esc(d.addr1))}
+        ${contactRow('location', esc(d.addr2))}
+        ${contactRow('globe',    `<a href="${esc(d.web)}" style="color:#1e3a6e;">${esc(d.web)}</a>`)}
+      </table>
+    </td>`;
     }
 
+    function logoCell(borderStyle) {
+      return `    <td style="${borderStyle}padding:6px 8px;vertical-align:middle;">
+      <img src="${LOGO_URL}" width="200" alt="Mountain Home HOA Solutions" style="display:block;" />
+    </td>`;
+    }
+
+    function buildHTML(d) {
+      const LINE = 'border-left:3px solid #5b9bd5;';
+      return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;">
+  <tr>
+${logoCell('')}
+${infoCell(d, LINE)}
+  </tr>
+</table>`;
+    }
+
+    // ── Copy to clipboard ─────────────────────────────────────────────
     async function copySignature() {
-      const html = buildHTML(val('f-name'), val('f-title'), val('f-phone'), val('f-addr1'), val('f-addr2'), val('f-web'));
-      const btn = document.getElementById('copy-btn');
+      const d   = getFormData();
+      const html = buildHTML(d);
+      const btn  = document.getElementById('copy-btn');
 
       try {
-        // Copy as rich text/html so email clients paste it rendered, not as code
         await navigator.clipboard.write([
           new ClipboardItem({
-            'text/html': new Blob([html], { type: 'text/html' }),
-            'text/plain': new Blob([val('f-name') + '\n' + val('f-title')], { type: 'text/plain' })
+            'text/html':  new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([d.name + '\n' + d.title], { type: 'text/plain' })
           })
         ]);
       } catch (e) {
-        // Fallback: render into a hidden element and use execCommand
         const tmp = document.createElement('div');
         tmp.innerHTML = html;
         Object.assign(tmp.style, { position: 'fixed', left: '-9999px', top: '0' });
@@ -521,7 +519,7 @@
       }, 2000);
     }
 
-    // Init output on load
+    // Init
     update();
   </script>
 
