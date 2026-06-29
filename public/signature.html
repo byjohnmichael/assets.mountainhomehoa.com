@@ -424,11 +424,11 @@
     // ── Render live preview ───────────────────────────────────────────
     function renderPreview(d) {
       return `<div class="sig-wrap">
-        <div class="sig-logo pad-logo-standard" style="padding-right:20px;">
-          ${previewLogo()}
-        </div>
-        <div class="sig-info line-on-left pad-info-standard">
+        <div class="sig-info pad-info-standard">
           ${previewInfo(d)}
+        </div>
+        <div class="sig-logo line-on-left pad-logo-after">
+          ${previewLogo()}
         </div>
       </div>`;
     }
@@ -454,7 +454,7 @@
     }
 
     function infoCell(d, borderStyle) {
-      return `    <td style="${borderStyle}padding:6px 24px 6px 16px;vertical-align:top;">
+      return `    <td style="${borderStyle}padding:6px 20px 6px 0;vertical-align:top;">
       <div style="font-size:17px;font-weight:700;color:#1e3a6e;line-height:1.2;margin-bottom:2px;">${esc(d.name)}</div>
       <div style="font-size:11px;font-weight:600;color:#5b9bd5;margin-bottom:8px;">${esc(d.title)}</div>
       <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;"><tr><td width="180" style="border-top:1px solid #5b9bd5;font-size:0;line-height:0;">&nbsp;</td></tr></table>
@@ -468,7 +468,7 @@
     }
 
     function logoCell(borderStyle) {
-      return `    <td style="${borderStyle}padding:6px 8px;vertical-align:middle;">
+      return `    <td style="${borderStyle}padding:6px 8px 6px 24px;vertical-align:middle;">
       <img src="${LOGO_URL}" width="200" alt="Mountain Home HOA Solutions" style="display:block;" />
     </td>`;
     }
@@ -477,8 +477,8 @@
       const LINE = 'border-left:3px solid #5b9bd5;';
       return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;">
   <tr>
-${logoCell('')}
-${infoCell(d, LINE)}
+${infoCell(d, '')}
+${logoCell(LINE)}
   </tr>
 </table>`;
     }

@@ -294,6 +294,13 @@
             </div>
             <label class="switch"><input type="checkbox" id="toggleShowPage" /><span class="slider"></span></label>
           </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <strong>Include as Reference</strong>
+              <span>Show this community's quote in the references section on the main site.</span>
+            </div>
+            <label class="switch"><input type="checkbox" id="toggleReference" /><span class="slider"></span></label>
+          </div>
         </div>
 
       </div>
@@ -422,6 +429,7 @@
         document.getElementById('fieldFilePassword').value = c.filePassword;
         document.getElementById('toggleEnabled').checked = c.enabled;
         document.getElementById('toggleShowPage').checked = c.showOnClientsPage;
+        document.getElementById('toggleReference').checked = c.includeAsReference || false;
         if (c.logoUrl) showLogoPreview(c.logoUrl);
       } else {
         modalTitle.textContent = 'Add Client';
@@ -432,6 +440,7 @@
         document.getElementById('fieldFilePassword').value = '';
         document.getElementById('toggleEnabled').checked = false;
         document.getElementById('toggleShowPage').checked = false;
+        document.getElementById('toggleReference').checked = false;
       }
 
       modalBackdrop.classList.remove('hidden');
@@ -501,6 +510,7 @@
           filePassword: document.getElementById('fieldFilePassword').value.trim(),
           enabled: document.getElementById('toggleEnabled').checked,
           showOnClientsPage: document.getElementById('toggleShowPage').checked,
+          includeAsReference: document.getElementById('toggleReference').checked,
           logoUrl,
         };
 

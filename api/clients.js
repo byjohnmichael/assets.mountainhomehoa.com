@@ -20,8 +20,8 @@ module.exports = async function handler(req, res) {
 
   const publicClients = clients
     .filter((c) => c.enabled && c.showOnClientsPage)
-    .map(({ id, name, description, quote, logoUrl }) => ({
-      id, name, description, quote, logoUrl,
+    .map(({ id, name, description, quote, logoUrl, includeAsReference }) => ({
+      id, name, description, quote, logoUrl, includeAsReference: includeAsReference || false,
     }));
 
   return res.json(publicClients);
