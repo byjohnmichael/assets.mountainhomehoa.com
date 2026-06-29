@@ -525,7 +525,13 @@
 
         if (!res || !res.ok) { alert('Save failed. Please try again.'); return; }
 
-        await loadClients();
+        const saved = await res.json();
+        if (editingId) {
+          clients = clients.map(c => c.id === editingId ? saved : c);
+        } else {
+          clients.push(saved);
+        }
+        renderClients();
         closeModal();
       } finally {
         saveBtn.textContent = 'Save Client';
@@ -537,7 +543,10 @@
     async function deleteClient(id, name) {
       if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
       const res = await authFetch(`/api/admin/client?id=${id}`, { method: 'DELETE' });
-      if (res) await loadClients();
+      if (res) {
+        clients = clients.filter(c => c.id !== id);
+        renderClients();
+      }
     }
 
     // ── Logo upload ────────────────────────────────────────────
