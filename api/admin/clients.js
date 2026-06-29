@@ -27,8 +27,9 @@ module.exports = async function handler(req, res) {
       fileUrl: body.fileUrl || '',
       filePassword: body.filePassword || '',
       logoUrl: body.logoUrl || '',
-      enabled: false,
-      showOnClientsPage: false,
+      enabled: body.enabled || false,
+      showOnClientsPage: body.showOnClientsPage || false,
+      includeAsReference: body.includeAsReference || false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

@@ -95,6 +95,13 @@
     .empty-state { text-align: center; padding: 60px 24px; color: var(--gray); }
     .empty-state h3 { font-size: 1.1rem; margin-bottom: 8px; }
 
+    /* ── Drag & drop ── */
+    .drag-handle { cursor: grab; color: var(--gray); opacity: 0.35; padding: 4px; flex-shrink: 0; transition: opacity 0.15s; }
+    .drag-handle:hover { opacity: 1; }
+    .client-card[draggable="true"] { cursor: default; }
+    .client-card.dragging { opacity: 0.35; }
+    .client-card.drag-over { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(91,155,213,0.25); }
+
     /* ── Modal ── */
     .modal-backdrop {
       position: fixed; inset: 0; z-index: 1000; background: rgba(30,58,110,0.5);
@@ -378,7 +385,10 @@
         return;
       }
       list.innerHTML = clients.map(c => `
-        <div class="client-card" data-id="${c.id}">
+        <div class="client-card" data-id="${c.id}" draggable="true">
+          <div class="drag-handle" title="Drag to reorder">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="5" cy="3.5" r="1.5"/><circle cx="11" cy="3.5" r="1.5"/><circle cx="5" cy="8" r="1.5"/><circle cx="11" cy="8" r="1.5"/><circle cx="5" cy="12.5" r="1.5"/><circle cx="11" cy="12.5" r="1.5"/></svg>
+          </div>
           <div class="client-logo">
             ${c.logoUrl
               ? `<img src="${c.logoUrl}" alt="${c.name}" />`
@@ -398,6 +408,7 @@
           </div>
         </div>
       `).join('');
+      initDrag();
     }
 
     // ── Modal ──────────────────────────────────────────────────
@@ -547,6 +558,54 @@
         clients = clients.filter(c => c.id !== id);
         renderClients();
       }
+    }
+
+    // ── Drag & drop reorder ────────────────────────────────────
+    let dragSrcId = null;
+
+    function initDrag() {
+      document.querySelectorAll('.client-card[draggable]').forEach(card => {
+        card.addEventListener('dragstart', e => {
+          dragSrcId = card.dataset.id;
+          card.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+          document.querySelectorAll('.client-card').forEach(c => c.classList.remove('drag-over'));
+        });
+
+        card.addEventListener('dragover', e => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          document.querySelectorAll('.client-card').forEach(c => c.classList.remove('drag-over'));
+          card.classList.add('drag-over');
+        });
+
+        card.addEventListener('drop', e => {
+          e.preventDefault();
+          const tgtId = card.dataset.id;
+          if (!dragSrcId || dragSrcId === tgtId) return;
+
+          const srcIdx = clients.findIndex(c => c.id === dragSrcId);
+          const tgtIdx = clients.findIndex(c => c.id === tgtId);
+          const [moved] = clients.splice(srcIdx, 1);
+          clients.splice(tgtIdx, 0, moved);
+
+          renderClients();
+          saveOrder();
+          dragSrcId = null;
+        });
+      });
+    }
+
+    async function saveOrder() {
+      await authFetch('/api/admin/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: clients.map(c => c.id) }),
+      });
     }
 
     // ── Logo upload ────────────────────────────────────────────
