@@ -62,6 +62,19 @@
 
     header .back:hover { text-decoration: underline; }
 
+    .btn-signout {
+      background: transparent;
+      border: 1px solid #dce4f0;
+      border-radius: 7px;
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-signout:hover { border-color: #f87171; color: #dc2626; }
+
     /* ── Page Layout ── */
     .page {
       max-width: 1140px;
@@ -153,80 +166,68 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .sig-wrap {
-      display: flex;
-      align-items: stretch;
-      gap: 0;
+    .sig-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 1px;
     }
 
-    /* Shared info block */
-    .sig-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-width: 270px;
+    .sig-subtitle {
+      font-size: 11px;
+      color: var(--navy);
+      margin-bottom: 5px;
     }
 
-    /* Shared logo block */
-    .sig-logo {
+    .sig-hr {
+      height: 0;
+      border: none;
+      border-top: 1.5px solid var(--blue);
+      margin: 0;
+    }
+
+    .sig-body {
       display: flex;
       align-items: center;
-      justify-content: center;
+      padding: 5px 0;
     }
 
-    .sig-logo img {
-      width: 200px;
+    .sig-logo-block {
+      display: flex;
+      align-items: center;
+      padding-right: 12px;
+    }
+
+    .sig-logo-block img {
+      width: 150px;
       height: auto;
       display: block;
     }
 
-    /* Line variants */
-    .line-on-left  { border-left: 3px solid var(--blue); }
-
-    /* Padding presets */
-    .pad-info-standard { padding: 8px 24px 8px 16px; }
-    .pad-info-after    { padding: 8px 8px 8px 20px; }
-    .pad-logo-standard { padding: 8px 16px; }
-    .pad-logo-after    { padding: 8px 8px 8px 24px; }
-
-    .sig-name {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--navy);
-      line-height: 1.2;
-      margin-bottom: 2px;
-    }
-
-    .sig-title {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--blue);
-      margin-bottom: 8px;
-    }
-
-    .sig-divider {
-      height: 0;
-      border: none;
-      border-top: 1px solid var(--blue);
-      margin-bottom: 8px;
-      width: 180px;
+    .sig-v-line {
+      width: 1.5px;
+      background: var(--blue);
+      align-self: stretch;
+      flex-shrink: 0;
     }
 
     .sig-contacts {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
+      padding-left: 12px;
     }
 
     .sig-row {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
     }
 
     .sig-icon {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       background: var(--navy);
       border-radius: 50%;
       display: flex;
@@ -236,8 +237,8 @@
     }
 
     .sig-icon svg {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       fill: white;
     }
 
@@ -311,6 +312,7 @@
       <p>Mountain Home HOA Solutions</p>
     </div>
     <a href="index.html" class="back">← Assets Portal</a>
+    <button class="btn-signout" onclick="signOut()">Sign Out</button>
   </header>
 
   <div class="page">
@@ -374,6 +376,13 @@
   </div>
 
   <script>
+    if (!sessionStorage.getItem('siteToken')) window.location.replace('login.html');
+
+    function signOut() {
+      sessionStorage.removeItem('siteToken');
+      window.location.href = 'login.html';
+    }
+
     const LOGO_URL  = 'https://assets.mountainhomehoa.com/logo-master.png';
     const ICON_BASE = 'https://assets.mountainhomehoa.com/icons';
 
@@ -404,32 +413,29 @@
       </div>`;
     }
 
-    function previewInfo(d) {
+    function previewContacts(d) {
       return `
-        <div class="sig-name">${d.name}</div>
-        <div class="sig-title">${d.title}</div>
-        <hr class="sig-divider" />
-        <div class="sig-contacts">
-          ${iconRow(SVG_PHONE,    `<span class="sig-contact-text">${d.phone}</span>`)}
-          ${iconRow(SVG_MAIL,     `<span class="sig-contact-text">${d.addr1}</span>`)}
-          ${iconRow(SVG_LOCATION, `<span class="sig-contact-text">${d.addr2}</span>`)}
-          ${iconRow(SVG_GLOBE,    `<a class="sig-contact-text" href="${d.web}" target="_blank">${d.web}</a>`)}
-        </div>`;
+        ${iconRow(SVG_PHONE,    `<span class="sig-contact-text">${d.phone}</span>`)}
+        ${iconRow(SVG_MAIL,     `<span class="sig-contact-text">${d.addr1}</span>`)}
+        ${iconRow(SVG_LOCATION, `<span class="sig-contact-text">${d.addr2}</span>`)}
+        ${iconRow(SVG_GLOBE,    `<a class="sig-contact-text" href="${d.web}" target="_blank">${d.web}</a>`)}`;
     }
 
     function previewLogo() {
-      return `<img src="logo-master.png" alt="Mountain Home HOA Solutions" style="width:200px;height:auto;display:block;" />`;
+      return `<img src="logo-master.png" alt="Mountain Home HOA Solutions" style="width:150px;height:auto;display:block;" />`;
     }
 
     // ── Render live preview ───────────────────────────────────────────
     function renderPreview(d) {
-      return `<div class="sig-wrap">
-        <div class="sig-info pad-info-standard">
-          ${previewInfo(d)}
+      return `<div>
+        <div class="sig-name">${d.name}</div>
+        <div class="sig-subtitle">Mountain Home HOA Solutions, ${d.title}</div>
+        <hr class="sig-hr" />
+        <div class="sig-body">
+          <div class="sig-logo-block">${previewLogo()}</div>
+          <div class="sig-contacts">${previewContacts(d)}</div>
         </div>
-        <div class="sig-logo line-on-left pad-logo-after">
-          ${previewLogo()}
-        </div>
+        <hr class="sig-hr" />
       </div>`;
     }
 
@@ -453,32 +459,32 @@
         </tr>`;
     }
 
-    function infoCell(d, borderStyle) {
-      return `    <td style="${borderStyle}padding:6px 20px 6px 0;vertical-align:top;">
-      <div style="font-size:17px;font-weight:700;color:#1e3a6e;line-height:1.2;margin-bottom:2px;">${esc(d.name)}</div>
-      <div style="font-size:11px;font-weight:600;color:#5b9bd5;margin-bottom:8px;">${esc(d.title)}</div>
-      <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;"><tr><td width="180" style="border-top:1px solid #5b9bd5;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+    function buildHTML(d) {
+      return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;">
+  <tr>
+    <td colspan="3" style="font-size:18px;font-weight:bold;color:#1e3a6e;line-height:1.2;padding:0 0 1px 0;">${esc(d.name)}</td>
+  </tr>
+  <tr>
+    <td colspan="3" style="font-size:11px;color:#1e3a6e;padding:0 0 5px 0;">Mountain Home HOA Solutions, ${esc(d.title)}</td>
+  </tr>
+  <tr>
+    <td colspan="3" height="1" bgcolor="#5b9bd5" style="font-size:0;line-height:0;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td style="padding:5px 12px 5px 0;vertical-align:middle;">
+      <img src="${LOGO_URL}" width="150" alt="Mountain Home HOA Solutions" style="display:block;" />
+    </td>
+    <td style="padding:5px 0 5px 12px;vertical-align:middle;">
       <table cellpadding="0" cellspacing="0" border="0">
         ${contactRow('phone',    esc(d.phone))}
         ${contactRow('mail',     esc(d.addr1))}
         ${contactRow('location', esc(d.addr2))}
         ${contactRow('globe',    `<a href="${esc(d.web)}" style="color:#1e3a6e;">${esc(d.web)}</a>`)}
       </table>
-    </td>`;
-    }
-
-    function logoCell(borderStyle) {
-      return `    <td style="${borderStyle}padding:6px 8px 6px 24px;vertical-align:middle;">
-      <img src="${LOGO_URL}" width="200" alt="Mountain Home HOA Solutions" style="display:block;" />
-    </td>`;
-    }
-
-    function buildHTML(d) {
-      const LINE = 'border-left:3px solid #5b9bd5;';
-      return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;">
+    </td>
+  </tr>
   <tr>
-${infoCell(d, '')}
-${logoCell(LINE)}
+    <td colspan="3" height="1" bgcolor="#5b9bd5" style="font-size:0;line-height:0;">&nbsp;</td>
   </tr>
 </table>`;
     }

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — Mountain Home HOA Solutions</title>
+  <link rel="icon" href="favicon.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1e3a6e;
+      --blue: #5b9bd5;
+      --gray: #6b7280;
+      --white: #ffffff;
+      --red: #dc2626;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('hero.png') center center / cover no-repeat fixed;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 30, 60, 0.62);
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 20px;
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.15);
+      text-align: center;
+    }
+
+    .card img {
+      height: 64px;
+      margin-bottom: 24px;
+    }
+
+    .card h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .card .subtitle {
+      font-size: 0.78rem;
+      color: var(--gray);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .field {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--navy);
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #dce4f0;
+      border-radius: 9px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--navy);
+      background: #f8fafd;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .field input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(91,155,213,0.18);
+      background: var(--white);
+    }
+
+    .error {
+      display: none;
+      font-size: 0.8rem;
+      color: var(--red);
+      margin: -8px 0 12px;
+      text-align: left;
+    }
+
+    .error.visible { display: block; }
+
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      border-radius: 9px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 4px;
+    }
+
+    .btn-login:hover { background: #16305c; }
+    .btn-login:disabled { opacity: 0.6; cursor: default; }
+
+    .footer-note {
+      margin-top: 24px;
+      font-size: 0.72rem;
+      color: var(--gray);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="card">
+    <img src="logo-master.png" alt="Mountain Home HOA Solutions" />
+    <h1>Mountain Home HOA Solutions</h1>
+    <p class="subtitle">Assets Portal</p>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" />
+    </div>
+
+    <p class="error" id="errorMsg">Incorrect password. Please try again.</p>
+
+    <button class="btn-login" id="loginBtn">Sign In</button>
+
+    <p class="footer-note">&copy; 2026 Mountain Home HOA Solutions &mdash; Internal Use Only</p>
+  </div>
+
+  <script>
+    // Redirect already-authenticated users
+    if (sessionStorage.getItem('siteToken')) {
+      window.location.replace('index.html');
+    }
+
+    const input   = document.getElementById('password');
+    const btn     = document.getElementById('loginBtn');
+    const errorEl = document.getElementById('errorMsg');
+
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    btn.addEventListener('click', doLogin);
+
+    async function doLogin() {
+      errorEl.classList.remove('visible');
+      btn.textContent = 'Signing in…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: input.value }),
+        });
+
+        if (!res.ok) throw new Error();
+
+        const { token } = await res.json();
+        sessionStorage.setItem('siteToken', token);
+        window.location.replace('index.html');
+      } catch {
+        errorEl.classList.add('visible');
+        input.select();
+      } finally {
+        btn.textContent = 'Sign In';
+        btn.disabled = false;
+      }
+    }
+
+    input.focus();
+  </script>
+
+</body>
+</html>

@@ -23,21 +23,7 @@
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--navy); min-height: 100vh; }
 
-    /* ── Auth Gate ── */
-    #authGate {
-      position: fixed; inset: 0; z-index: 9999;
-      background: rgba(30,58,110,0.92); backdrop-filter: blur(8px);
-      display: flex; align-items: center; justify-content: center; padding: 1.5rem;
-    }
-    #authGate.hidden { display: none; }
-    .auth-card {
-      background: var(--white); border-radius: 16px;
-      padding: 2.5rem 2rem; max-width: 380px; width: 100%; text-align: center;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.35);
-    }
-    .auth-card img { height: 52px; margin-bottom: 1.5rem; }
-    .auth-card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.4rem; }
-    .auth-card p { font-size: 0.875rem; color: var(--gray); margin-bottom: 1.75rem; }
+    /* ── Sign Out ── */
 
     /* ── Header ── */
     header {
@@ -48,7 +34,9 @@
     .header-left { display: flex; align-items: center; gap: 16px; }
     header img { height: 48px; }
     .header-title h1 { font-size: 1.1rem; font-weight: 700; }
-    .header-title p { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; }
+    .header-title p { font-size: 0.75rem; color: var(--gray); margin-top: 1px; }
+    .btn-signout { background: transparent; border: 1px solid #dce4f0; border-radius: 7px; padding: 7px 14px; font-size: 0.8rem; font-weight: 600; color: var(--gray); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+    .btn-signout:hover { border-color: #f87171; color: var(--red); }
 
     /* ── Layout ── */
     .main { max-width: 1000px; margin: 0 auto; padding: 40px 24px; }
@@ -180,33 +168,18 @@
 </head>
 <body>
 
-  <!-- Auth Gate -->
-  <div id="authGate">
-    <div class="auth-card">
-      <img src="logo-master.png" alt="MHHOA" />
-      <h2>Admin Access</h2>
-      <p>Enter your admin password to continue.</p>
-      <div class="field">
-        <label for="gatePassword">Password</label>
-        <input type="password" id="gatePassword" placeholder="Enter password" autocomplete="current-password" />
-        <div class="field-error" id="gateError">Incorrect password. Try again.</div>
-      </div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;" id="gateSubmit">Unlock Admin</button>
-    </div>
-  </div>
-
   <!-- Header -->
   <header>
     <div class="header-left">
-      <img src="logo-master.png" alt="MHHOA" />
+      <img src="logo-master.png" alt="Mountain Home HOA Solutions" />
       <div class="header-title">
-        <h1>Admin Dashboard</h1>
-        <p>Client Management</p>
+        <h1>Management Dashboard</h1>
+        <p>Mountain Home HOA Solutions</p>
       </div>
     </div>
     <div style="display:flex;gap:10px;align-items:center;">
-      <a href="index.html" class="btn btn-ghost btn-sm">← Back to Portal</a>
-      <button class="btn btn-logout btn-sm" id="logoutBtn">Log Out</button>
+      <a href="index.html" class="btn btn-ghost btn-sm">← Assets Portal</a>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
     </div>
   </header>
 
@@ -222,6 +195,18 @@
 
     <div class="client-list" id="clientList">
       <div class="empty-state"><h3>Loading clients…</h3></div>
+    </div>
+
+    <div class="section-header" style="margin-top:48px;">
+      <h2>Team Members</h2>
+      <button class="btn btn-primary" id="addMemberBtn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Add Member
+      </button>
+    </div>
+
+    <div class="client-list" id="teamList">
+      <div class="empty-state"><h3>Loading team…</h3></div>
     </div>
   </main>
 
@@ -318,57 +303,94 @@
     </div>
   </div>
 
+  <!-- Team Member Modal -->
+  <div class="modal-backdrop hidden" id="teamModalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="teamModalTitle">
+      <div class="modal-header">
+        <h3 id="teamModalTitle">Add Team Member</h3>
+        <button class="modal-close" id="teamModalClose" aria-label="Close">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label>Photo</label>
+          <div class="logo-upload-area" id="teamPhotoDropArea" role="button" tabindex="0">
+            <img class="logo-preview" id="teamPhotoPreview" src="" alt="Photo preview" style="display:none;" />
+            <div class="logo-upload-label" id="teamPhotoUploadLabel">
+              <svg width="32" height="32" fill="none" stroke="#9ca3af" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 8px;display:block;"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/></svg>
+              <strong>Click to upload</strong> or drag and drop<br>PNG, JPG, WebP — max 2 MB
+            </div>
+          </div>
+          <input type="file" id="teamPhotoInput" accept="image/png,image/jpeg,image/webp" />
+          <p class="form-hint" id="teamPhotoStatus"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="teamFieldName">Full Name <span style="color:var(--red)">*</span></label>
+          <input type="text" id="teamFieldName" placeholder="e.g. Jane Smith" />
+        </div>
+
+        <div class="form-group">
+          <label for="teamFieldRole">Title / Role <span style="color:var(--red)">*</span></label>
+          <input type="text" id="teamFieldRole" placeholder="e.g. Director of Operations" />
+        </div>
+
+        <div class="form-group">
+          <label for="teamFieldBio">Bio</label>
+          <textarea id="teamFieldBio" placeholder="Brief professional background shown on the site…" style="min-height:90px;"></textarea>
+        </div>
+
+        <div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <strong>Enabled</strong>
+              <span>Person is active in the system. Disabling hides them everywhere.</span>
+            </div>
+            <label class="switch"><input type="checkbox" id="teamToggleEnabled" /><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <strong>Show on Homepage</strong>
+              <span>Display this person in the "Meet the Team" section on the homepage.</span>
+            </div>
+            <label class="switch"><input type="checkbox" id="teamToggleHome" /><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <strong>Show on About Page</strong>
+              <span>Display this person in the leadership section on the About page.</span>
+            </div>
+            <label class="switch"><input type="checkbox" id="teamToggleAbout" /><span class="slider"></span></label>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="teamCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="teamSaveBtn">Save Member</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    if (!sessionStorage.getItem('siteToken')) window.location.replace('login.html');
+
+    function signOut() {
+      sessionStorage.removeItem('siteToken');
+      window.location.href = 'login.html';
+    }
+
     const API = '';
-    let token = sessionStorage.getItem('adminToken');
+    let token = sessionStorage.getItem('siteToken');
     let clients = [];
     let editingId = null;
     let pendingLogoBase64 = null;
     let pendingLogoType = null;
     let pendingLogoName = null;
 
-    // ── Auth gate ──────────────────────────────────────────────
-    const authGate = document.getElementById('authGate');
-    const gatePassword = document.getElementById('gatePassword');
-    const gateSubmit = document.getElementById('gateSubmit');
-    const gateError = document.getElementById('gateError');
-
-    if (token) {
-      authGate.classList.add('hidden');
-      loadClients();
-    }
-
-    gateSubmit.addEventListener('click', doLogin);
-    gatePassword.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-
-    async function doLogin() {
-      gateError.style.display = 'none';
-      gateSubmit.textContent = 'Checking…';
-      gateSubmit.disabled = true;
-      try {
-        const res = await fetch(`${API}/api/admin/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: gatePassword.value }),
-        });
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        token = data.token;
-        sessionStorage.setItem('adminToken', token);
-        authGate.classList.add('hidden');
-        loadClients();
-      } catch {
-        gateError.style.display = 'block';
-      } finally {
-        gateSubmit.textContent = 'Unlock Admin';
-        gateSubmit.disabled = false;
-      }
-    }
-
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      sessionStorage.removeItem('adminToken');
-      location.reload();
-    });
+    loadClients();
 
     // ── Load clients ───────────────────────────────────────────
     async function loadClients() {
@@ -688,8 +710,8 @@
         headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}` },
       });
       if (res.status === 401) {
-        sessionStorage.removeItem('adminToken');
-        location.reload();
+        sessionStorage.removeItem('siteToken');
+        window.location.href = 'login.html';
         return null;
       }
       return res;
@@ -702,6 +724,259 @@
 
     function initials(name) {
       return (name || '').split(' ').slice(0, 3).map(w => w[0] || '').join('').toUpperCase() || '?';
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // TEAM MEMBERS
+    // ══════════════════════════════════════════════════════════
+    let team = [];
+    let editingMemberId = null;
+    let pendingPhotoBase64 = null;
+    let pendingPhotoType = null;
+    let pendingPhotoName = null;
+
+    async function loadTeam() {
+      const res = await authFetch('/api/admin/team');
+      if (!res) return;
+      team = await res.json();
+      renderTeam();
+    }
+
+    loadTeam();
+
+    function renderTeam() {
+      const list = document.getElementById('teamList');
+      if (!team.length) {
+        list.innerHTML = `<div class="empty-state"><h3>No team members yet</h3><p>Click "Add Member" to get started.</p></div>`;
+        return;
+      }
+      list.innerHTML = team.map(m => `
+        <div class="client-card" data-member-id="${m.id}" draggable="true">
+          <div class="drag-handle" title="Drag to reorder">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="5" cy="3.5" r="1.5"/><circle cx="11" cy="3.5" r="1.5"/><circle cx="5" cy="8" r="1.5"/><circle cx="11" cy="8" r="1.5"/><circle cx="5" cy="12.5" r="1.5"/><circle cx="11" cy="12.5" r="1.5"/></svg>
+          </div>
+          <div class="client-logo">
+            ${m.photoUrl
+              ? `<img src="${m.photoUrl}" alt="${escHtml(m.name)}" style="width:100%;height:100%;object-fit:cover;" />`
+              : `<span class="client-logo-placeholder">${initials(m.name)}</span>`}
+          </div>
+          <div class="client-info">
+            <h3>${escHtml(m.name) || '<em style="color:var(--gray)">Unnamed</em>'}</h3>
+            <div class="badges">
+              <span class="badge ${m.enabled ? 'badge-enabled' : 'badge-disabled'}">${m.enabled ? 'Enabled' : 'Disabled'}</span>
+              <span class="badge ${m.showOnHome ? 'badge-visible' : 'badge-hidden'}">${m.showOnHome ? 'On Homepage' : 'Not on Homepage'}</span>
+              <span class="badge ${m.showOnAbout ? 'badge-visible' : 'badge-hidden'}">${m.showOnAbout ? 'On About' : 'Not on About'}</span>
+            </div>
+          </div>
+          <div class="client-actions">
+            <button class="btn btn-ghost btn-sm" onclick="openEditMember('${m.id}')">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteMember('${m.id}', '${escHtml(m.name)}')">Delete</button>
+          </div>
+        </div>
+      `).join('');
+      initTeamDrag();
+    }
+
+    // ── Team modal ─────────────────────────────────────────────
+    const teamModalBackdrop = document.getElementById('teamModalBackdrop');
+    const teamModalTitle    = document.getElementById('teamModalTitle');
+    const teamSaveBtn       = document.getElementById('teamSaveBtn');
+
+    document.getElementById('addMemberBtn').addEventListener('click', () => openTeamModal(null));
+    document.getElementById('teamCancelBtn').addEventListener('click', closeTeamModal);
+    document.getElementById('teamModalClose').addEventListener('click', closeTeamModal);
+    teamModalBackdrop.addEventListener('click', e => { if (e.target === teamModalBackdrop) closeTeamModal(); });
+    teamSaveBtn.addEventListener('click', saveMember);
+
+    function openTeamModal(id) {
+      editingMemberId = id;
+      pendingPhotoBase64 = null;
+      pendingPhotoType = null;
+      pendingPhotoName = null;
+      resetTeamPhotoUI();
+
+      if (id) {
+        const m = team.find(x => x.id === id);
+        teamModalTitle.textContent = 'Edit Team Member';
+        document.getElementById('teamFieldName').value  = m.name;
+        document.getElementById('teamFieldRole').value  = m.role;
+        document.getElementById('teamFieldBio').value   = m.bio;
+        document.getElementById('teamToggleEnabled').checked = m.enabled;
+        document.getElementById('teamToggleHome').checked    = m.showOnHome;
+        document.getElementById('teamToggleAbout').checked   = m.showOnAbout;
+        if (m.photoUrl) showTeamPhotoPreview(m.photoUrl);
+      } else {
+        teamModalTitle.textContent = 'Add Team Member';
+        document.getElementById('teamFieldName').value  = '';
+        document.getElementById('teamFieldRole').value  = '';
+        document.getElementById('teamFieldBio').value   = '';
+        document.getElementById('teamToggleEnabled').checked = false;
+        document.getElementById('teamToggleHome').checked    = false;
+        document.getElementById('teamToggleAbout').checked   = false;
+      }
+
+      teamModalBackdrop.classList.remove('hidden');
+      document.getElementById('teamFieldName').focus();
+    }
+
+    function openEditMember(id) { openTeamModal(id); }
+
+    function closeTeamModal() {
+      teamModalBackdrop.classList.add('hidden');
+      editingMemberId = null;
+    }
+
+    async function saveMember() {
+      const name = document.getElementById('teamFieldName').value.trim();
+      const role = document.getElementById('teamFieldRole').value.trim();
+      if (!name) { alert('Name is required.'); return; }
+      if (!role) { alert('Role / title is required.'); return; }
+
+      teamSaveBtn.textContent = 'Saving…';
+      teamSaveBtn.disabled = true;
+
+      try {
+        let photoUrl = editingMemberId ? (team.find(m => m.id === editingMemberId)?.photoUrl || '') : '';
+
+        if (pendingPhotoBase64) {
+          const upRes = await authFetch('/api/admin/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ base64: pendingPhotoBase64, contentType: pendingPhotoType, filename: pendingPhotoName }),
+          });
+          if (!upRes || !upRes.ok) { alert('Photo upload failed. Please try again.'); return; }
+          photoUrl = (await upRes.json()).url;
+        }
+
+        const payload = {
+          name,
+          role,
+          bio: document.getElementById('teamFieldBio').value.trim(),
+          photoUrl,
+          enabled:     document.getElementById('teamToggleEnabled').checked,
+          showOnHome:  document.getElementById('teamToggleHome').checked,
+          showOnAbout: document.getElementById('teamToggleAbout').checked,
+        };
+
+        const url    = editingMemberId ? `/api/admin/team-member?id=${editingMemberId}` : '/api/admin/team';
+        const method = editingMemberId ? 'PUT' : 'POST';
+        const res    = await authFetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+
+        if (!res || !res.ok) { alert('Save failed. Please try again.'); return; }
+
+        const saved = await res.json();
+        if (editingMemberId) {
+          team = team.map(m => m.id === editingMemberId ? saved : m);
+        } else {
+          team.push(saved);
+        }
+        renderTeam();
+        closeTeamModal();
+      } finally {
+        teamSaveBtn.textContent = 'Save Member';
+        teamSaveBtn.disabled = false;
+      }
+    }
+
+    async function deleteMember(id, name) {
+      if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+      const res = await authFetch(`/api/admin/team-member?id=${id}`, { method: 'DELETE' });
+      if (res) {
+        team = team.filter(m => m.id !== id);
+        renderTeam();
+      }
+    }
+
+    // ── Team drag & drop reorder ───────────────────────────────
+    let dragSrcMemberId = null;
+
+    function initTeamDrag() {
+      document.querySelectorAll('[data-member-id]').forEach(card => {
+        card.addEventListener('dragstart', e => {
+          dragSrcMemberId = card.dataset.memberId;
+          card.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+          document.querySelectorAll('[data-member-id]').forEach(c => c.classList.remove('drag-over'));
+        });
+        card.addEventListener('dragover', e => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          document.querySelectorAll('[data-member-id]').forEach(c => c.classList.remove('drag-over'));
+          card.classList.add('drag-over');
+        });
+        card.addEventListener('drop', e => {
+          e.preventDefault();
+          const tgtId = card.dataset.memberId;
+          if (!dragSrcMemberId || dragSrcMemberId === tgtId) return;
+          const srcIdx = team.findIndex(m => m.id === dragSrcMemberId);
+          const tgtIdx = team.findIndex(m => m.id === tgtId);
+          const [moved] = team.splice(srcIdx, 1);
+          team.splice(tgtIdx, 0, moved);
+          renderTeam();
+          authFetch('/api/admin/team-reorder', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids: team.map(m => m.id) }),
+          });
+          dragSrcMemberId = null;
+        });
+      });
+    }
+
+    // ── Team photo upload ──────────────────────────────────────
+    const teamPhotoDropArea = document.getElementById('teamPhotoDropArea');
+    const teamPhotoInput    = document.getElementById('teamPhotoInput');
+
+    teamPhotoDropArea.addEventListener('click', () => teamPhotoInput.click());
+    teamPhotoDropArea.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') teamPhotoInput.click(); });
+    teamPhotoDropArea.addEventListener('dragover', e => { e.preventDefault(); teamPhotoDropArea.style.borderColor = 'var(--blue)'; });
+    teamPhotoDropArea.addEventListener('dragleave', () => { teamPhotoDropArea.style.borderColor = ''; });
+    teamPhotoDropArea.addEventListener('drop', e => {
+      e.preventDefault();
+      teamPhotoDropArea.style.borderColor = '';
+      if (e.dataTransfer.files[0]) handleTeamPhoto(e.dataTransfer.files[0]);
+    });
+    teamPhotoInput.addEventListener('change', () => {
+      if (teamPhotoInput.files[0]) handleTeamPhoto(teamPhotoInput.files[0]);
+    });
+
+    function handleTeamPhoto(file) {
+      if (file.size > 2 * 1024 * 1024) { alert('File too large. Maximum 2 MB.'); return; }
+      const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowed.includes(file.type)) { alert('Only JPEG, PNG, and WebP files are allowed.'); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        pendingPhotoBase64 = dataUrl.split(',')[1];
+        pendingPhotoType   = file.type;
+        pendingPhotoName   = file.name;
+        showTeamPhotoPreview(dataUrl);
+        document.getElementById('teamPhotoStatus').textContent = `"${file.name}" ready to upload on save.`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function showTeamPhotoPreview(src) {
+      const preview = document.getElementById('teamPhotoPreview');
+      preview.src = src;
+      preview.style.display = 'block';
+      document.getElementById('teamPhotoUploadLabel').innerHTML = '<span style="color:var(--blue);font-size:0.8rem;font-weight:600;">Click to change photo</span>';
+      teamPhotoDropArea.classList.add('has-preview');
+    }
+
+    function resetTeamPhotoUI() {
+      const preview = document.getElementById('teamPhotoPreview');
+      preview.src = '';
+      preview.style.display = 'none';
+      document.getElementById('teamPhotoUploadLabel').innerHTML = `
+        <svg width="32" height="32" fill="none" stroke="#9ca3af" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 8px;display:block;"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/></svg>
+        <strong>Click to upload</strong> or drag and drop<br>PNG, JPG, WebP — max 2 MB`;
+      teamPhotoDropArea.classList.remove('has-preview');
+      document.getElementById('teamPhotoStatus').textContent = '';
+      teamPhotoInput.value = '';
     }
   </script>
 </body>

@@ -28,45 +28,53 @@
     header {
       background: var(--white);
       border-bottom: 3px solid var(--blue);
-      padding: 20px 40px;
+      padding: 16px 32px;
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
       box-shadow: 0 2px 8px rgba(30,58,110,0.08);
     }
 
     header img {
-      height: 60px;
+      height: 48px;
       width: auto;
     }
 
     .header-text h1 {
-      font-size: 1.35rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--navy);
-      letter-spacing: -0.01em;
     }
 
     .header-text p {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--gray);
-      margin-top: 2px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      margin-top: 1px;
     }
 
     /* ── Hero ── */
     .hero {
-      background: linear-gradient(135deg, var(--navy) 0%, #2a5298 100%);
+      background: linear-gradient(rgba(20,40,80,0.58), rgba(20,40,80,0.58)),
+                  url('page-hero.png') center center / cover no-repeat;
       color: var(--white);
-      padding: 60px 40px;
+      padding: 80px 40px;
       text-align: center;
     }
 
     .hero h2 {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero h3 {
+      font-size: 1rem;
+      font-weight: 400;
+      opacity: 0.75;
+      margin-bottom: 16px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .hero p {
@@ -180,6 +188,21 @@
       pointer-events: none;
     }
 
+    /* ── Sign Out ── */
+    .btn-signout {
+      margin-left: auto;
+      background: transparent;
+      border: 1px solid #dce4f0;
+      border-radius: 7px;
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-signout:hover { border-color: #f87171; color: #dc2626; }
+
     /* ── Footer ── */
     footer {
       text-align: center;
@@ -195,13 +218,15 @@
   <header>
     <img src="logo-master.png" alt="Mountain Home HOA Solutions" />
     <div class="header-text">
-      <h1>MHHOA Assets Portal</h1>
-      <p>Assets Portal</p>
+      <h1>Assets Portal</h1>
+      <p>Mountain Home HOA Solutions</p>
     </div>
+    <button class="btn-signout" onclick="signOut()">Sign Out</button>
   </header>
 
   <div class="hero">
-    <h2>MHHOA Assets Portal</h2>
+    <h2>Mountain Home HOA Solutions</h2>
+    <h3>Assets Portal</h3>
     <p>Brand assets, tools, and resources for Mountain Home HOA Solutions.</p>
   </div>
 
@@ -245,85 +270,33 @@
         <span class="arrow" style="color:#9ca3af;">Coming soon</span>
       </div>
 
-      <div class="card" id="adminCard" style="border-color:#e0c87a;background:#fffdf0;">
+      <a href="admin.html" class="card" style="border-color:#e0c87a;background:#fffdf0;">
         <div class="card-icon" style="background:#fdf3c0;">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#7c6400">
             <path d="M12 1C8.676 1 6 3.676 6 7v1H4v15h16V8h-2V7c0-3.324-2.676-6-6-6zm0 2c2.276 0 4 1.724 4 4v1H8V7c0-2.276 1.724-4 4-4zm0 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
           </svg>
         </div>
-        <span class="badge" style="background:#fdf3c0;color:#7c6400;">Admin</span>
-        <h4>Admin Interface</h4>
+        <span class="badge" style="background:#fdf3c0;color:#7c6400;">Management</span>
+        <h4>Management Dashboard</h4>
         <p>Manage client communities, documents, passwords, and what appears on the public website.</p>
-        <span class="arrow" style="color:#7c6400;">Open admin →</span>
-      </div>
+        <span class="arrow" style="color:#7c6400;">Open dashboard →</span>
+      </a>
 
     </div>
   </section>
-
-  <!-- Admin Login Modal -->
-  <div id="adminModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(30,58,110,0.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1.5rem;">
-    <div style="background:#fff;border-radius:16px;padding:2.25rem 2rem;max-width:360px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.35);">
-      <img src="logo-master.png" alt="MHHOA" style="height:48px;margin-bottom:1.5rem;" />
-      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:0.35rem;color:#1e3a6e;">Admin Access</h2>
-      <p style="font-size:0.875rem;color:#6b7280;margin-bottom:1.5rem;">Enter your admin password to continue.</p>
-      <div style="text-align:left;margin-bottom:14px;">
-        <label style="font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#1e3a6e;display:block;margin-bottom:6px;">Password</label>
-        <input type="password" id="adminPwInput" placeholder="Enter password" autocomplete="current-password"
-          style="width:100%;padding:10px 14px;border:1.5px solid #dce4f0;border-radius:8px;font-size:0.9rem;font-family:inherit;color:#1e3a6e;" />
-        <p id="adminPwError" style="display:none;color:#dc2626;font-size:0.78rem;margin-top:6px;">Incorrect password. Try again.</p>
-      </div>
-      <button id="adminPwSubmit" style="width:100%;padding:10px;background:#1e3a6e;color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;margin-bottom:10px;">Unlock Admin</button>
-      <button id="adminModalClose" style="width:100%;padding:8px;background:transparent;border:1px solid #dce4f0;border-radius:8px;font-size:0.85rem;color:#6b7280;cursor:pointer;">Cancel</button>
-    </div>
-  </div>
 
   <footer>
     &copy; 2026 Mountain Home HOA Solutions &mdash; Internal Use Only
   </footer>
 
   <script>
-    const adminModal = document.getElementById('adminModal');
-    const adminCard = document.getElementById('adminCard');
-    const adminPwInput = document.getElementById('adminPwInput');
-    const adminPwError = document.getElementById('adminPwError');
-    const adminPwSubmit = document.getElementById('adminPwSubmit');
+    if (!sessionStorage.getItem('siteToken')) window.location.replace('login.html');
 
-    adminCard.addEventListener('click', () => {
-      adminModal.style.display = 'flex';
-      adminPwInput.value = '';
-      adminPwError.style.display = 'none';
-      setTimeout(() => adminPwInput.focus(), 50);
-    });
-
-    document.getElementById('adminModalClose').addEventListener('click', () => {
-      adminModal.style.display = 'none';
-    });
-
-    adminPwInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitAdminLogin(); });
-    adminPwSubmit.addEventListener('click', submitAdminLogin);
-
-    async function submitAdminLogin() {
-      adminPwError.style.display = 'none';
-      adminPwSubmit.textContent = 'Checking…';
-      adminPwSubmit.disabled = true;
-      try {
-        const res = await fetch('/api/admin/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: adminPwInput.value }),
-        });
-        if (!res.ok) throw new Error();
-        const { token } = await res.json();
-        sessionStorage.setItem('adminToken', token);
-        window.location.href = 'admin.html';
-      } catch {
-        adminPwError.style.display = 'block';
-        adminPwInput.select();
-      } finally {
-        adminPwSubmit.textContent = 'Unlock Admin';
-        adminPwSubmit.disabled = false;
-      }
+    function signOut() {
+      sessionStorage.removeItem('siteToken');
+      window.location.href = 'login.html';
     }
+
   </script>
 </body>
 </html>

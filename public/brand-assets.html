@@ -58,6 +58,19 @@
 
     header .back:hover { text-decoration: underline; }
 
+    .btn-signout {
+      background: transparent;
+      border: 1px solid #dce4f0;
+      border-radius: 7px;
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-signout:hover { border-color: #f87171; color: #dc2626; }
+
     .page {
       max-width: 900px;
       margin: 0 auto;
@@ -171,6 +184,58 @@
 
     .btn-copy svg { width: 13px; height: 13px; fill: currentColor; }
 
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .color-card {
+      background: var(--white);
+      border: 1px solid #dce4f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .color-swatch {
+      height: 100px;
+      width: 100%;
+    }
+
+    .color-info {
+      padding: 16px;
+    }
+
+    .color-info h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .color-info .color-desc {
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+
+    .color-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .color-meta span {
+      font-family: 'Menlo', 'Monaco', monospace;
+      font-size: 0.7rem;
+      color: var(--gray);
+      background: #f0f4fb;
+      padding: 3px 7px;
+      border-radius: 4px;
+    }
+
     footer {
       text-align: center;
       padding: 32px 24px;
@@ -190,9 +255,87 @@
       <p>Mountain Home HOA Solutions</p>
     </div>
     <a href="index.html" class="back">← Assets Portal</a>
+    <button class="btn-signout" onclick="signOut()">Sign Out</button>
   </header>
 
   <div class="page">
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+      <p class="section-label" style="margin-bottom:0;">Brand Color Palette</p>
+      <a href="LogoColorScheme.xlsx" download class="btn-download" style="font-size:0.78rem;">
+        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zm-8 2V5h2v6h1.17L12 13.17 9.83 11H11zm-6 7h14v2H5z"/></svg>
+        Download Color Palette Sheet
+      </a>
+    </div>
+
+    <div class="color-grid">
+
+      <div class="color-card">
+        <div class="color-swatch" style="background:#254062;"></div>
+        <div class="color-info">
+          <h3>Primary Navy</h3>
+          <p class="color-desc">Deep alpine navy — primary brand color</p>
+          <div class="color-meta">
+            <span>HEX &nbsp;#254062</span>
+            <span>RGB &nbsp;37, 64, 98</span>
+          </div>
+          <button class="btn-copy" onclick="copyHex(this, '#254062')">
+            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            Copy HEX
+          </button>
+        </div>
+      </div>
+
+      <div class="color-card">
+        <div class="color-swatch" style="background:#A1B7CE;"></div>
+        <div class="color-info">
+          <h3>Secondary Blue</h3>
+          <p class="color-desc">Soft mountain blue</p>
+          <div class="color-meta">
+            <span>HEX &nbsp;#A1B7CE</span>
+            <span>RGB &nbsp;161, 183, 206</span>
+          </div>
+          <button class="btn-copy" onclick="copyHex(this, '#A1B7CE')">
+            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            Copy HEX
+          </button>
+        </div>
+      </div>
+
+      <div class="color-card">
+        <div class="color-swatch" style="background:#919BA2;"></div>
+        <div class="color-info">
+          <h3>Mountain Gray</h3>
+          <p class="color-desc">Stone/slate gray</p>
+          <div class="color-meta">
+            <span>HEX &nbsp;#919BA2</span>
+            <span>RGB &nbsp;145, 155, 162</span>
+          </div>
+          <button class="btn-copy" onclick="copyHex(this, '#919BA2')">
+            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            Copy HEX
+          </button>
+        </div>
+      </div>
+
+      <div class="color-card">
+        <div class="color-swatch" style="background:#FFFFFF; border-bottom: 1px solid #dce4f0;"></div>
+        <div class="color-info">
+          <h3>White</h3>
+          <p class="color-desc">Snow/background</p>
+          <div class="color-meta">
+            <span>HEX &nbsp;#FFFFFF</span>
+            <span>RGB &nbsp;255, 255, 255</span>
+          </div>
+          <button class="btn-copy" onclick="copyHex(this, '#FFFFFF')">
+            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            Copy HEX
+          </button>
+        </div>
+      </div>
+
+    </div>
+
     <p class="section-label">Available Assets</p>
 
     <div class="assets-grid">
@@ -245,6 +388,24 @@
   </footer>
 
   <script>
+    if (!sessionStorage.getItem('siteToken')) window.location.replace('login.html');
+
+    function signOut() {
+      sessionStorage.removeItem('siteToken');
+      window.location.href = 'login.html';
+    }
+
+    function copyHex(btn, hex) {
+      navigator.clipboard.writeText(hex).then(() => {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Copy HEX`;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
     function copyURL(btn, url) {
       navigator.clipboard.writeText(url).then(() => {
         btn.textContent = '✓ Copied!';
